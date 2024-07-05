@@ -1,0 +1,21 @@
+name: Example
+
+on:
+  push:
+  pull_request:
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+permissions:
+  pull-requests: read
+
+jobs:
+  ci:
+    uses: folke/github/.github/workflows/ci.yml@main
+    secrets: inherit
+    with:
+      plugin: foobar
