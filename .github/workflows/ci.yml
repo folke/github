@@ -6,6 +6,10 @@ on:
         description: "Plugin name"
         type: string
         required: true
+      repo:
+        description: "Repo Short Url"
+        type: string
+        required: true
       tests:
         description: "Run tests"
         type: boolean
@@ -62,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: [tests, build]
-    if: ${{ !failure() && inputs.docs && github.ref == 'refs/heads/main' }}
+    if: ${{ !failure() && inputs.docs && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v4
       - uses: folke/github/neovim@main
@@ -88,7 +92,7 @@ jobs:
   release:
     name: release
     needs: tests
-    if: ${{ inputs.release && github.ref == 'refs/heads/main' }}
+    if: ${{ inputs.release && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -118,32 +122,3 @@ jobs:
           git push origin :stable || true
           git tag -a stable -m "Last Stable Release"
           git push origin stable
-
-  pr-title:
-    name: Validate PR title
-    runs-on: ubuntu-latest
-    steps:
-      - uses: amannn/action-semantic-pull-request@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          requireScope: true
-          subjectPattern: ^(?![A-Z]).+$
-          scopes: |
-            .+
-          types: |
-            build
-            chore
-            ci
-            docs
-            feat
-            fix
-            merge
-            perf
-            refactor
-            revert
-            style
-            test
-            wip
-          ignoreLabels: |
-            autorelease: pending
