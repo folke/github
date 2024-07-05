@@ -38,8 +38,25 @@ jobs:
       - name: Run Tests
         run: ./scripts/test
 
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: tests
+    if: ${{ inputs.build }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: folke/github/neovim@main
+      - name: Run Build
+        run: ./scripts/build
+      - name: Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(build): auto-generated build files"
+
   docs:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [tests, build]
     if: ${{ inputs.docs && github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v4
@@ -61,13 +78,11 @@ jobs:
       - name: Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore(build): auto-generate vimdoc"
-          commit_user_name: "github-actions[bot]"
-          commit_user_email: "github-actions[bot]@users.noreply.github.com"
-          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          commit_message: "chore(build): auto-generate docs"
 
   release:
     name: release
+    needs: tests
     if: ${{ inputs.release && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     steps:
