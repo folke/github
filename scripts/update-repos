@@ -1,0 +1,9 @@
+#!/bin/env bash
+
+repos=$(gh repo list --source --no-archived --json nameWithOwner --jq ".[].nameWithOwner" | rg nvim | sort)
+echo "$repos"
+for repo in $repos; do
+  echo "Updating $repo"
+  gh repo edit "$repo" --allow-update-branch --enable-discussions --enable-squash-merge --enable-rebase-merge --enable-merge-commit=false --enable-wiki
+  gh api "repos/$repo/branches/main/protection" --method PUT --input scripts/branch-protection.json
+done

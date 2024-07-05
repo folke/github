@@ -1,0 +1,14 @@
+{
+  "allow_deletions": false,
+  "allow_force_pushes": false,
+  "allow_fork_syncing": false,
+  "block_creations": false,
+  "enforce_admins": false,
+  "lock_branch": false,
+  "required_conversation_resolution": false,
+  "required_linear_history": false,
+  "required_signatures": false,
+  "required_status_checks": null,
+  "required_pull_request_reviews": null,
+  "restrictions": null
+}
