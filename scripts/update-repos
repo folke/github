@@ -1,10 +1,12 @@
 #!/bin/env bash
 
+set -e
+
 repos=$(gh repo list --source --no-archived --json nameWithOwner --jq ".[].nameWithOwner" | rg nvim | sort)
 repos="$repos folke/github LazyVim/LazyVim"
-echo "$repos"
 for repo in $repos; do
-  echo "Updating $repo"
+  echo "[$repo]"
   gh repo edit "$repo" --allow-update-branch --enable-discussions --enable-squash-merge --enable-rebase-merge --enable-merge-commit=false --enable-wiki
-  gh api "repos/$repo/branches/main/protection" --method PUT --input scripts/branch-protection.json
+  gh api "repos/$repo/branches/main/protection" --method PUT --input scripts/branch-protection.json >/dev/null
+  gh api "repos/$repo" --method PATCH -f "squash_merge_commit_title=PR_TITLE" -f "squash_merge_commit_message=PR_BODY" >/dev/null
 done
