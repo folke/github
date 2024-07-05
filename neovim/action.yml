@@ -1,0 +1,42 @@
+name: "Install Neovim"
+description: "Install Neovim"
+inputs:
+  version:
+    description: "Neovim version to install. Can be stable/nightly or a version"
+    required: true
+    default: "stable"
+runs:
+  using: "composite"
+  steps:
+    - name: Date
+      shell: bash
+      run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+    - name: Neovim Cache Restore
+      id: cache-neovim-restore
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ runner.temp }}/nvim
+        key: neovim-cache-${{ env.DATE }}-${{ inputs.version }}
+    - name: Install Neovim
+      if: steps.cache-neovim-restore.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        mkdir -p ${{ runner.temp }}/nvim
+        wget -q https://github.com/neovim/neovim/releases/download/${{ inputs.version }}/nvim.appimage -O ${{ runner.temp }}/nvim/nvim.appimage
+        cd ${{ runner.temp }}/nvim
+        chmod a+x ./nvim.appimage
+        ./nvim.appimage --appimage-extract
+    - name: Neovim Cache Save
+      id: cache-neovim-save
+      if: steps.cache-neovim-restore.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ runner.temp }}/nvim
+        key: ${{ steps.cache-neovim-restore.outputs.cache-primary-key }}
+    - name: Add Neovim to PATH
+      shell: bash
+      run: |
+        echo "${{ runner.temp }}/nvim/squashfs-root/usr/bin/" >> $GITHUB_PATH
+    - name: Neovim version
+      shell: bash
+      run: nvim --version
