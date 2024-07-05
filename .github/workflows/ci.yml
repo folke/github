@@ -114,6 +114,8 @@ jobs:
             echo "config-file=.github/release-please-config.json" >> $GITHUB_OUTPUT
             [ -f .github/release-please-manifest.json ] &&
               echo "manifest-file=.github/release-please-manifest.json" >> $GITHUB_OUTPUT
+            [ -f .github/.release-please-manifest.json ] &&
+              echo "manifest-file=.github/.release-please-manifest.json" >> $GITHUB_OUTPUT
           else
             echo "release-type=simple" >> $GITHUB_OUTPUT
           fi
