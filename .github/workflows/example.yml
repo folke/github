@@ -2,6 +2,7 @@ name: Example
 
 on:
   push:
+    branches: [main, master]
   pull_request:
   pull_request_target:
     types:
@@ -9,6 +10,7 @@ on:
       - edited
       - synchronize
       - reopened
+      - ready_for_review
 
 permissions:
   pull-requests: read
@@ -16,6 +18,12 @@ permissions:
 jobs:
   ci:
     uses: folke/github/.github/workflows/ci.yml@main
+    if: ${{ github.event_name != 'pull_request_target' }}
     secrets: inherit
     with:
       plugin: foobar
+
+  pr-title:
+    uses: folke/github/.github/workflows/pr.yml@main
+    if: ${{ github.event_name == 'pull_request_target' }}
+    secrets: inherit
