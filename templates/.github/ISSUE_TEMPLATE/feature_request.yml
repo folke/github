@@ -3,6 +3,7 @@ description: Suggest a new feature
 title: "feature: "
 labels: [enhancement]
 body:
+${feature_request.top}
   - type: checkboxes
     attributes:
       label: Did you check the docs?
@@ -10,6 +11,7 @@ body:
       options:
         - label: I have read all the ${name} docs
           required: true
+${feature_request.checks}
   - type: textarea
     validations:
       required: true

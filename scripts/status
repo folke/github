@@ -1,0 +1,10 @@
+#!/bin/env bash
+
+repos=$(gh repo list --source --no-archived --json nameWithOwner --jq ".[].nameWithOwner" | rg nvim | sort)
+repos="$repos folke/github LazyVim/LazyVim"
+for repo in $repos; do
+  echo "Status $repo"
+  # strip owner
+  dir=$HOME/projects/$(echo "$repo" | cut -d'/' -f2)
+  git -C "$dir" status -sb
+done
