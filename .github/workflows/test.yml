@@ -8,9 +8,3 @@ jobs:
     uses: folke/github/.github/workflows/ci.yml@main
     with:
       plugin: foobar
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: folke/github/neovim@main
-      - uses: folke/github/neovim@main

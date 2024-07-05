@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: [tests, build]
-    if: ${{ inputs.docs && github.ref == 'refs/heads/main' }}
+    if: ${{ !failure() && inputs.docs && github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v4
       - uses: folke/github/neovim@main
