@@ -4,6 +4,7 @@ local M = {}
 
 M.keep = {
 	"tests/minit.lua",
+	"LICENSE.md",
 }
 
 M.props = {
@@ -14,29 +15,39 @@ M.props = {
 }
 
 M.repos = {
-	-- "LazyVim/LazyVim",
-	-- "folke/drop.nvim",
-	-- "folke/edgy.nvim",
-	-- "folke/flash.nvim",
-	-- "folke/lazydev.nvim",
-	-- "folke/lazy.nvim",
-	-- "folke/neoconf.nvim",
-	-- "folke/neodev.nvim",
-	-- "folke/noice.nvim",
-	-- "folke/persistence.nvim",
-	-- "folke/styler.nvim",
-	-- "folke/todo-comments.nvim",
-	-- "folke/tokyonight.nvim",
-	-- "folke/trouble.nvim",
-	-- "folke/ts-comments.nvim",
-	-- "folke/which-key.nvim",
-	-- "folke/zen-mode.nvim",
+	"LazyVim/LazyVim",
+	"folke/drop.nvim",
+	"folke/edgy.nvim",
+	"folke/flash.nvim",
+	"folke/lazydev.nvim",
+	"folke/lazy.nvim",
+	"folke/neoconf.nvim",
+	"folke/neodev.nvim",
+	"folke/noice.nvim",
+	"folke/persistence.nvim",
+	"folke/styler.nvim",
+	"folke/todo-comments.nvim",
+	"folke/tokyonight.nvim",
+	"folke/trouble.nvim",
+	"folke/ts-comments.nvim",
+	"folke/which-key.nvim",
+	"folke/zen-mode.nvim",
 }
 
 ---@param dir string
 ---@param props table
 function M.templates(dir, props)
 	local have_tests = vim.uv.fs_stat(dir .. "/tests") ~= nil
+	local have_contributing = vim.uv.fs_stat(dir .. "/CONTRIBUTING.md") ~= nil
+	if have_contributing then
+		props.checklist = vim.trim([[
+## Checklist
+
+- [ ] I've read the [CONTRIBUTING](https://github.com/LazyVim/LazyVim/blob/main/CONTRIBUTING.md) guidelines.
+    ]])
+  else
+    props.checklist = ""
+	end
 	props.tests = tostring(have_tests)
 	local tpl_dir = vim.fs.normalize(Util.me .. "/templates")
 	vim.fs.find(function(name, path)
@@ -45,6 +56,11 @@ function M.templates(dir, props)
 			print(" - skipping", tpl)
 			return false
 		end
+
+    if tpl:find(".github") and dir:find("/github$") then
+      print(" - skipping", tpl)
+      return false
+    end
 
 		if (tpl:find("scripts") or tpl:find("tests")) and not have_tests then
 			print(" - skipping", tpl)

@@ -1,6 +1,7 @@
 #!/bin/env bash
 
 repos=$(gh repo list --source --no-archived --json nameWithOwner --jq ".[].nameWithOwner" | rg nvim | sort)
+repos="$repos folke/github LazyVim/LazyVim"
 echo "$repos"
 for repo in $repos; do
   echo "Updating $repo"
