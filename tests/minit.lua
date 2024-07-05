@@ -5,5 +5,7 @@ load(vim.fn.system("curl -s https://raw.githubusercontent.com/folke/lazy.nvim/ma
 
 -- Setup lazy.nvim
 require("lazy.minit").setup({
-	spec = {},
+	spec = {
+		{ dir = vim.uv.cwd() },
+	},
 })
