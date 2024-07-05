@@ -10,5 +10,5 @@ jobs:
     uses: folke/github/.github/workflows/ci.yml@main
     secrets: inherit
     with:
-      plugin: foobar
-      repo: folke/github
+      plugin: ${name}
+      repo: ${repo}
