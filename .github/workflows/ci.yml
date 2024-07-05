@@ -32,6 +32,17 @@ on:
         default: true
 
 jobs:
+  stylua:
+    name: Stylua
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: JohnnyMorganz/stylua-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: --check .
+
   tests:
     runs-on: ubuntu-latest
     timeout-minutes: 10
