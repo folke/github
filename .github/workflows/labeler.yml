@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/labeler@v5
-        if: ${{ hashFiles('.github/labeler.yml') != "" }}
+        if: ${{ hashFiles('.github/labeler.yml') != '' }}
