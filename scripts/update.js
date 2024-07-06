@@ -1,8 +1,8 @@
 // @ts-check
 /** @param {import('github-script').AsyncFunctionArguments} AsyncFunctionArguments */
 module.exports = async ({ github, context }) => {
-  const repos = await github.request("GET /users/folke/repos", {
-    username: "folke",
+  const repos = await github.request("GET /user/repos", {
+    visibility: "public",
     per_page: 100,
     type: "owner",
   });
