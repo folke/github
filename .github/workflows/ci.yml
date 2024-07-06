@@ -78,7 +78,6 @@ jobs:
       - uses: folke/github/neovim@main
       - name: Run Build
         run: ./scripts/build
-      - run: git pull
       - name: Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
