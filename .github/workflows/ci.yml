@@ -21,9 +21,9 @@ jobs:
     name: Repo Config
     runs-on: ubuntu-latest
     outputs:
-      has_tests: ${{ steps.tests.outputs.has_tests }}
-      has_docs: ${{ steps.docs.outputs.has_docs }}
-      has_build: ${{ steps.build.outputs.has_build }}
+      has_tests: ${{ steps.tests.outputs.has_tests == 'true' }}
+      has_docs: ${{ steps.docs.outputs.has_docs == 'true' }}
+      has_build: ${{ steps.build.outputs.has_build == 'true' }}
     steps:
       - uses: actions/checkout@v4
       - id: tests
@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: [tests, config]
-    if: ${{ !failure() && needs.config.outputs.has_build == true && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
+    if: ${{ !failure() && needs.config.outputs.has_build && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v4
       - uses: folke/github/neovim@main
@@ -92,7 +92,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: folke/github/neovim@main
       - name: Generate docs
-        if: ${{ needs.config.outputs.has_docs == true }}
+        if: ${{ needs.config.outputs.has_docs }}
         shell: bash
         run: ./scripts/docs
       - name: Create /doc
