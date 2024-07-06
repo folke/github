@@ -13,11 +13,10 @@ runs:
         path: update
     - name: Update Repo
       shell: bash
-      working-directory: update
       env:
         BUILD_REPO: ${{ github.repository }}
         BUILD_TARGET: "../repo"
-      run: ./scripts/update
+      run: ./update/scripts/update
     - name: Update Repo Settings
       uses: actions/github-script@v7
       working-directory: update
