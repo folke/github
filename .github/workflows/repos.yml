@@ -6,7 +6,7 @@ on:
   workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
-  cleanup-notifications:
+  update-settings:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
