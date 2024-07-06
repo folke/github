@@ -9,6 +9,7 @@ module.exports = async ({ github }) => {
     const notifs = await github.request("GET /notifications", {
       per_page: PER_PAGE,
       page: page,
+      all: true,
       // before: before.toISOString(),
     });
 
@@ -18,18 +19,18 @@ module.exports = async ({ github }) => {
     for (const notif of notifs.data) {
       let done = false;
 
-      // Mark discussions as done
-      if (notif.subject.type == "Discussion") {
+      if (
+        notif.subject.type == "Discussion" ||
+        notif.subject.type == "CheckSuite"
+      ) {
+        // Mark discussions as done
         done = true;
-      }
-
-      // Mark closes isssues / RRs as done
-      else if (
+      } else if (
+        // Mark closes isssues / RRs as done
         notif.subject.type == "Issue" ||
         notif.subject.type == "PullRequest"
       ) {
         const latestCommentUrl = notif.subject.latest_comment_url;
-        // Fetch the issue/PR details
         const details = await github.request(`GET ${notif.subject.url}`);
         // Mark as done if the issue/PR is closed
         if (details.data.state === "closed") done = true;
