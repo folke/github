@@ -2,14 +2,17 @@ module.exports = async ({ github }) => {
   const PER_PAGE = 100;
   let page = 1;
   let before = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+  let haveMore = true;
 
-  do {
+  while (haveMore) {
     // Fetch notifications for the current page
     const notifs = await github.request("GET /notifications", {
       per_page: PER_PAGE,
       page: page,
       // before: before.toISOString(),
     });
+
+    haveMore = notifs.data.length === PER_PAGE;
 
     // Loop through each notification and its corresponding ID
     for (const notif of notifs.data) {
@@ -34,20 +37,9 @@ module.exports = async ({ github }) => {
         else if (latestCommentUrl) {
           // Fetch the comment details
           const comment = await github.request(`GET ${latestCommentUrl}`);
-          const isStaleBot =
+          done =
             comment.data.user.login === "github-actions[bot]" &&
             /stale/.test(comment.data.body);
-
-          // If the comment was made by stale-bot, delete the notification
-          if (isStaleBot) {
-            done = true;
-            console.log(`Deleting notification: ${notif.url}`);
-            await github.request(`DELETE /notifications/threads/${notif.id}`);
-          } else {
-            console.log(
-              `Notification is not from stale-bot ${notif.id} ${latestCommentUrl}`,
-            );
-          }
         }
       }
       if (done) {
@@ -60,5 +52,5 @@ module.exports = async ({ github }) => {
 
     // Move to the next page
     page++;
-  } while (notifs.data.length === PER_PAGE);
+  }
 };
