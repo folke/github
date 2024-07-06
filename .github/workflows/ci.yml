@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: tests
-    if: ${{ inputs.build }}
+    if: ${{ !failure() && inputs.build }}
     steps:
       - uses: actions/checkout@v4
       - uses: folke/github/neovim@main
@@ -111,7 +111,7 @@ jobs:
   release:
     name: release
     needs: tests
-    if: ${{ inputs.release && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
+    if: ${{ !failure() && inputs.release && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
