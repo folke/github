@@ -1,12 +1,20 @@
 // @ts-check
 /** @param {import('github-script').AsyncFunctionArguments} AsyncFunctionArguments */
 module.exports = async ({ github, context }) => {
-  let before = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+  /**
+   * @param {number} days
+   */
+  function date(days) {
+    return new Date(
+      new Date().getTime() - (days ?? 1) * 24 * 60 * 60 * 1000,
+    ).toISOString();
+  }
 
   // Fetch notifications for the current page
   const notifs = await github.paginate("GET /notifications", {
     all: true,
-    before: before.toISOString(),
+    before: date(1),
+    since: date(3),
   });
 
   // Loop through each notification and its corresponding ID
