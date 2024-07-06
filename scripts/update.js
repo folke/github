@@ -9,7 +9,8 @@ module.exports = async ({ github, context }) => {
 
   for (const repo of repos.data) {
     const [owner, name] = repo.full_name.split("/");
-    if (!name.includes("nvim") || repo.fork) continue;
+    if (!name.includes("nvim") || repo.fork || repo.archived || repo.disabled)
+      continue;
 
     console.log(`Updating ${repo.full_name}...`);
     // Enable repository settings
