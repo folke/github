@@ -5,16 +5,18 @@ runs:
   steps:
     - uses: actions/checkout@v4
       with:
-        repository: "folke/github"
-    - uses: actions/checkout@v4
-      with:
         path: "repo"
     - uses: folke/github/neovim@main
+    - uses: actions/checkout@v4
+      with:
+        repository: "folke/github"
+        path: update
     - name: Update Repo
       shell: bash
+      working-directory: update
       env:
         BUILD_REPO: ${{ github.repository }}
-        BUILD_TARGET: "repo"
+        BUILD_TARGET: "../repo"
       run: ./scripts/update
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
