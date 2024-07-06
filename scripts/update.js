@@ -1,6 +1,6 @@
 // @ts-check
 /** @param {import('github-script').AsyncFunctionArguments} AsyncFunctionArguments */
-export default async ({ github, context }) => {
+module.exports = async ({ github, context }) => {
   const repo = `${context.repo.owner}/${context.repo.repo}`;
 
   // Enable repository settings

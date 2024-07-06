@@ -1,6 +1,6 @@
 // @ts-check
 /** @param {import('github-script').AsyncFunctionArguments} AsyncFunctionArguments */
-export default async ({ github, context }) => {
+module.exports = async ({ github, context }) => {
   const PER_PAGE = 100;
   let page = 1;
   let before = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
