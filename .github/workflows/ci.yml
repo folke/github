@@ -10,21 +10,6 @@ on:
         description: "Repo Short Url"
         type: string
         required: true
-      tests:
-        description: "Run tests"
-        type: boolean
-        required: false
-        default: true
-      docs:
-        description: "Generate docs"
-        type: boolean
-        required: false
-        default: true
-      build:
-        description: "Build"
-        type: boolean
-        required: false
-        default: false
       release:
         description: "Release"
         type: boolean
@@ -32,6 +17,21 @@ on:
         default: true
 
 jobs:
+  config:
+    name: Repo Config
+    runs-on: ubuntu-latest
+    outputs:
+      has_tests: ${{ steps.tests.outputs.has_tests }}
+      has_docs: ${{ steps.docs.outputs.has_docs }}
+      has_build: ${{ steps.build.outputs.has_build }}
+    steps:
+      - id: tests
+        run: echo "has_tests=${{ hashFiles('scripts/test') != '' }}" >> "$GITHUB_OUTPUT"
+      - id: docs
+        run: echo "has_docs=${{ hashFiles('scripts/docs') != '' }}" >> "$GITHUB_OUTPUT"
+      - id: build
+        run: echo "has_build=${{ hashFiles('scripts/build') != '' }}" >> "$GITHUB_OUTPUT"
+
   stylua:
     name: Stylua
     runs-on: ubuntu-latest
@@ -54,7 +54,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: ${{ inputs.tests }}
+    if: ${{ needs.config.outputs.has_tests }}
     steps:
       - uses: actions/checkout@v4
       - uses: folke/github/neovim@main
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: tests
-    if: ${{ !failure() && inputs.build }}
+    if: ${{ !failure() && needs.config.outputs.has_build && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v4
       - uses: folke/github/neovim@main
@@ -85,15 +85,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: [tests, build]
-    if: ${{ !failure() && inputs.docs && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
+    if: ${{ !failure() && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v4
       - uses: folke/github/neovim@main
       - name: Generate docs
+        if: needs.config.outputs.has_docs
         shell: bash
-        run: |
-          [ ! -f scripts/docs ] && exit 0
-          ./scripts/docs
+        run: ./scripts/docs
       - name: Create /doc
         run: mkdir -p doc
       - name: panvimdoc

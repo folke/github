@@ -12,4 +12,3 @@ jobs:
     with:
       plugin: ${name}
       repo: ${repo}
-      tests: ${tests}

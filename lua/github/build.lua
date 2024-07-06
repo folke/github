@@ -64,7 +64,6 @@ function M.templates(dir, props)
   else
     props.checklist = ""
   end
-  props.tests = tostring(have_tests)
   local tpl_dir = vim.fs.normalize(Util.me .. "/templates")
   vim.fs.find(function(name, path)
     local tpl = (path .. "/" .. name):sub(#tpl_dir + 2)
