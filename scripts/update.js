@@ -2,13 +2,14 @@
 /** @param {import('github-script').AsyncFunctionArguments} AsyncFunctionArguments */
 module.exports = async ({ github, context }) => {
   const repos = await github.request("GET /users/folke/repos", {
+    username: "folke",
     per_page: 100,
     type: "owner",
   });
 
   for (const repo of repos.data) {
     const [owner, name] = repo.full_name.split("/");
-    if (!name.includes("nvim")) continue;
+    if (!name.includes("nvim") || repo.fork) continue;
 
     console.log(`Updating ${repo.full_name}...`);
     // Enable repository settings
@@ -25,9 +26,10 @@ module.exports = async ({ github, context }) => {
       squash_merge_commit_message: "PR_BODY",
     });
 
+    const branch = repo.default_branch;
     // Update branch protection
     await github.request(
-      `PUT /repos/${owner}/${name}/branches/main/protection`,
+      `PUT /repos/${owner}/${name}/branches/${branch}/protection`,
       {
         headers: {
           accept: "application/vnd.github.v3+json",
