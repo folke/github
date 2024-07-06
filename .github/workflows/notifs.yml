@@ -1,0 +1,22 @@
+name: Cleanup Notifications
+
+on:
+  schedule:
+    - cron: "0 * * * *" # Runs every hour
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+jobs:
+  cleanup-notifications:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Cleanup Notifications
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const script = require('./scripts/cleanup.js')
+            console.log(script({github, context}))
+        env:
+          GITHUB_TOKEN: ${{ secrets.CLEANUP_TOKEN }} # Use the secret you created
