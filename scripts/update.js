@@ -4,13 +4,12 @@ module.exports = async ({ github, context }) => {
   const repos = await github.request("GET /user/repos", {
     visibility: "public",
     per_page: 100,
-    type: "owner",
+    affiliation: "owner",
   });
 
   for (const repo of repos.data) {
     const [owner, name] = repo.full_name.split("/");
     if (!name.includes("nvim") || repo.fork || repo.archived || repo.disabled) {
-      console.log(`Skipping ${repo.full_name}...`);
       continue;
     }
 
