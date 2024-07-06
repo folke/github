@@ -18,12 +18,6 @@ runs:
         BUILD_REPO: ${{ github.repository }}
         BUILD_TARGET: "../repo"
       run: ./scripts/update
-    - name: Update Repo Settings
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const script = require('./update/scripts/update.js')
-          script({github, context})
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
       with:

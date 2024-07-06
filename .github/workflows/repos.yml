@@ -1,0 +1,21 @@
+name: Repo Settings
+
+on:
+  schedule:
+    - cron: "0 * * * *" # Runs every hour
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+jobs:
+  cleanup-notifications:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Update Repo Settings
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.CLEANUP_TOKEN }} # Use the secret you created
+          script: |
+            const script = require('./scripts/update.js')
+            script({github, context})
