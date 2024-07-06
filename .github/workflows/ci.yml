@@ -43,6 +43,15 @@ jobs:
           version: latest
           args: --check lua
 
+  debug:
+    name: Check that no debug messages are left
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: folke/github/neovim@main
+      - name: Check Debug
+        run: /bin/grep --line-number -r '\\bdd(' lua || echo "No debug messages found"
+
   tests:
     runs-on: ubuntu-latest
     timeout-minutes: 10
