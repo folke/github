@@ -1,0 +1,10 @@
+name: Update Repo
+on:
+  workflow_call:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: folke/github/update@main
