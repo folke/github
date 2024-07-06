@@ -111,7 +111,8 @@ function M.update(repo)
   local parts = vim.split(repo, "/")
   assert(#parts == 2, "Invalid repo: " .. repo)
 
-  local dir = vim.fs.normalize("~/projects/" .. parts[2])
+  local target = vim.env.BUILD_TARGET or ("~/projects/" .. parts[2])
+  local dir = vim.fs.normalize(target)
 
   assert(vim.uv.fs_stat(dir), "Directory does not exist: " .. dir)
 
@@ -122,7 +123,9 @@ function M.update(repo)
 end
 
 function M.build()
-  for _, repo in ipairs(M.repos) do
+  ---@type string[]
+  local repos = vim.env.BUILD_REPO and { vim.env.BUILD_REPO } or M.repos
+  for _, repo in ipairs(repos) do
     M.update(repo)
   end
 end

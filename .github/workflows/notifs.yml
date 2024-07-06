@@ -18,4 +18,4 @@ jobs:
           github-token: ${{ secrets.CLEANUP_TOKEN }} # Use the secret you created
           script: |
             const script = require('./scripts/cleanup.js')
-            console.log(script({github, context}))
+            script({github, context})
