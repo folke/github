@@ -20,6 +20,7 @@ runs:
       run: ./scripts/update
     - name: Update Repo Settings
       uses: actions/github-script@v7
+      working-directory: update
       with:
         script: |
           const script = require('./scripts/update.js')
