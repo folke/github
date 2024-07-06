@@ -44,7 +44,9 @@ module.exports = async ({ github }) => {
         }
       }
       // remove api. and repos/ from the url
-      const url = notif.subject.url.replace("api.", "").replace("repos/", "");
+      const url = (notif.subject.url ?? notif.url)
+        .replace("api.", "")
+        .replace("repos/", "");
       if (done) {
         console.log(`❌ ${notif.subject.title}\n  - ${url}`);
         await github.request(`DELETE /notifications/threads/${notif.id}`);
