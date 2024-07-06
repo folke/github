@@ -8,6 +8,7 @@ M.keep = {
 }
 
 M.props = {
+  ["tokyonight.nvim"] = { spec = "" },
   ["LazyVim"] = {
     spec = '{ "LazyVim/LazyVim", import = "lazyvim.plugins" },',
     feature_request = {
@@ -33,10 +34,9 @@ M.repos = {
   "folke/edgy.nvim",
   "folke/flash.nvim",
   "folke/github",
-  "folke/lazydev.nvim",
   "folke/lazy.nvim",
+  "folke/lazydev.nvim",
   "folke/neoconf.nvim",
-  "folke/neodev.nvim",
   "folke/noice.nvim",
   "folke/persistence.nvim",
   "folke/styler.nvim",
