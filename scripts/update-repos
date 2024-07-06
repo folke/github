@@ -2,7 +2,7 @@
 
 set -e
 
-repos=$(gh repo list --source --no-archived --json nameWithOwner --jq ".[].nameWithOwner" | rg nvim | sort)
+repos=$(gh repo list -L200 --source --no-archived --json nameWithOwner --jq ".[].nameWithOwner" | rg nvim | rg -v "plugin-tools" | sort)
 repos="$repos folke/github LazyVim/LazyVim"
 for repo in $repos; do
   echo "[$repo]"
