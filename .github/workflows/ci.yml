@@ -25,6 +25,7 @@ jobs:
       has_docs: ${{ steps.docs.outputs.has_docs }}
       has_build: ${{ steps.build.outputs.has_build }}
     steps:
+      - uses: actions/checkout@v4
       - id: tests
         run: echo "has_tests=${{ hashFiles('scripts/test') != '' }}" >> "$GITHUB_OUTPUT"
       - id: docs
