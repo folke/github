@@ -1,13 +1,12 @@
 // @ts-check
 /** @param {import('github-script').AsyncFunctionArguments} AsyncFunctionArguments */
 module.exports = async ({ github, context }) => {
-  const repos = await github.request("GET /user/repos", {
-    visibility: "public",
+  const repos = await github.paginate("GET /user/repos", {
+    type: "public",
     per_page: 100,
-    affiliation: "owner",
   });
 
-  for (const repo of repos.data) {
+  for (const repo of repos) {
     const [owner, name] = repo.full_name.split("/");
     if (!name.includes("nvim") || repo.fork || repo.archived || repo.disabled) {
       continue;
