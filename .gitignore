@@ -6,3 +6,4 @@ debug
 doc/tags
 foo.*
 tt.*
+node_modules
