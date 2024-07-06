@@ -2,7 +2,8 @@
 /** @param {import('github-script').AsyncFunctionArguments} AsyncFunctionArguments */
 module.exports = async ({ github, context }) => {
   const repos = await github.paginate("GET /user/repos", {
-    type: "public",
+    affiliation: "owner",
+    visibility: "public",
     per_page: 100,
   });
 
