@@ -20,13 +20,14 @@ module.exports = async ({ github }) => {
       let done = false;
 
       if (
+        // Skip discussions, check suites and releases
         notif.subject.type == "Discussion" ||
-        notif.subject.type == "CheckSuite"
+        notif.subject.type == "CheckSuite" ||
+        notif.subject.type == "Release"
       ) {
         // Mark discussions as done
         done = true;
       } else if (
-        // Mark closes isssues / RRs as done
         notif.subject.type == "Issue" ||
         notif.subject.type == "PullRequest"
       ) {
