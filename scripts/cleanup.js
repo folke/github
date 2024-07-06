@@ -10,7 +10,7 @@ module.exports = async ({ github }) => {
       per_page: PER_PAGE,
       page: page,
       all: true,
-      // before: before.toISOString(),
+      before: before.toISOString(),
     });
 
     haveMore = notifs.data.length === PER_PAGE;
