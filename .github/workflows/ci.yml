@@ -75,6 +75,7 @@ jobs:
     if: ${{ !failure() && needs.config.outputs.has_build == 'true' && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v4
+      - run: git pull
       - uses: folke/github/neovim@main
       - name: Run Build
         run: ./scripts/build
