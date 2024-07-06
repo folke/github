@@ -44,10 +44,10 @@ module.exports = async ({ github }) => {
         }
       }
       if (done) {
-        console.log(`Deleting notification: ${notif.url}`);
+        console.log(`❌ ${notif.subject.title}\n  - ${notif.url}`);
         await github.request(`DELETE /notifications/threads/${notif.id}`);
       } else {
-        console.log(`Skipping notifications ${notif.url}`);
+        console.log(`✅ ${notif.subject.title}\n  - ${notif.url}`);
       }
     }
 
