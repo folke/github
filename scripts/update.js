@@ -8,9 +8,9 @@ module.exports = async ({ github, context }) => {
   });
 
   const LABELS = [
-    { name: "stale", color: "#F9D0C4" },
-    { name: "upstream", color: "#FBCA04" },
-    { name: "autorelease: pending", color: "#0e8a16" },
+    { name: "stale", color: "F9D0C4" },
+    { name: "upstream", color: "FBCA04" },
+    { name: "autorelease: pending", color: "0e8a16" },
   ];
 
   for (const repo of repos) {
