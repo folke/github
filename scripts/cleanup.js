@@ -10,11 +10,20 @@ module.exports = async ({ github, context }) => {
     ).toISOString();
   }
 
+  const before = context.eventName == "workflow_dispatch" ? undefined : date(1);
+  const since = date(3);
+
+  console.log(`🧹 Cleaning up notifications`);
+  console.log(`📡 Event name: ${context.eventName}`);
+  console.log(`📅 Current date: ${new Date().toISOString()}`);
+  console.log(`📅 Since: ${since}`);
+  console.log(`📅 Before: ${before}`);
+
   // Fetch notifications for the current page
   const notifs = await github.paginate("GET /notifications", {
     all: true,
-    before: date(1),
-    since: date(3),
+    before,
+    since,
   });
 
   // Loop through each notification and its corresponding ID
