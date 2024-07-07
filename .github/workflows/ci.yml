@@ -50,7 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check Debug
-        run: /bin/grep --line-number -r '\\bdd(' lua || echo "No debug messages found"
+        run: /bin/grep --line-number -r '\bdd(' lua || echo "No debug messages found"
 
   tests:
     runs-on: ubuntu-latest
