@@ -7,6 +7,12 @@ module.exports = async ({ github, context }) => {
     per_page: 100,
   });
 
+  const LABELS = [
+    { name: "stale", color: "#F9D0C4" },
+    { name: "upstream", color: "#FBCA04" },
+    { name: "autorelease: pending", color: "#0e8a16" },
+  ];
+
   for (const repo of repos) {
     const [owner, name] = repo.full_name.split("/");
     if (!name.includes("nvim") || repo.fork || repo.archived || repo.disabled) {
@@ -50,5 +56,36 @@ module.exports = async ({ github, context }) => {
         restrictions: null,
       },
     );
+
+    // Labels
+    const labels = await github.rest.issues.listLabelsForRepo({
+      owner,
+      repo: name,
+    });
+    for (const label of LABELS) {
+      const existing = labels.data.find((l) => l.name === label.name);
+      if (
+        existing?.color === label.color &&
+        existing?.description === label.description
+      ) {
+        continue;
+      }
+      if (existing) {
+        await github.rest.issues.updateLabel({
+          owner,
+          repo: name,
+          name: label.name,
+          new_name: label.name,
+          color: label.color,
+        });
+      } else {
+        await github.rest.issues.createLabel({
+          owner,
+          repo: name,
+          name: label.name,
+          color: label.color,
+        });
+      }
+    }
   }
 };
