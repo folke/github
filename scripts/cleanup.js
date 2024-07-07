@@ -60,10 +60,14 @@ module.exports = async ({ github, context }) => {
       .replace("api.", "")
       .replace("repos/", "");
     if (done) {
-      console.log(`❌ ${notif.subject.title}\n  - ${url}`);
+      console.log(
+        `❌ [${notif.repository.full_name}] ${notif.subject.title}\n  - ${url}`,
+      );
       await github.request(`DELETE /notifications/threads/${notif.id}`);
     } else {
-      console.log(`✅ ${notif.subject.title}\n  - ${url}`);
+      console.log(
+        `✅ [${notif.repository.full_name}] ${notif.subject.title}\n  - ${url}`,
+      );
     }
   }
 };
