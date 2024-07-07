@@ -62,6 +62,7 @@ module.exports = async ({ github, context }) => {
       owner,
       repo: name,
     });
+    console.log(labels.data);
     for (const label of LABELS) {
       const existing = labels.data.find((l) => l.name === label.name);
       if (
