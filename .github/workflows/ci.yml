@@ -91,6 +91,7 @@ jobs:
     if: ${{ !failure() && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v4
+      - run: git pull
       - uses: folke/github/neovim@main
       - name: Generate docs
         if: ${{ needs.config.outputs.has_docs == 'true' }}
@@ -105,7 +106,6 @@ jobs:
           version: "Neovim"
           demojify: true
           treesitter: true
-      - run: git pull
       - name: Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
