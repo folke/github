@@ -106,6 +106,7 @@ jobs:
           version: "Neovim"
           demojify: true
           treesitter: true
+      - run: git pull
       - name: Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
