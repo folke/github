@@ -25,7 +25,10 @@ M.props = {
       ]],
     },
   },
-  ["lazy.nvim"] = { spec = "" },
+  ["lazy.nvim"] = {
+    spec = "",
+    ci = "      docs: false",
+  },
 }
 
 M.repos = {
@@ -85,6 +88,7 @@ function M.templates(dir, props)
     for k, v in pairs(M.props[props.name] or {}) do
       props[k] = v
     end
+    props.ci = props.ci or ""
     if not props.spec then
       props.spec = ([[{ "%s", opts = {} },]]):format(props.repo)
     end

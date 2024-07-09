@@ -15,6 +15,11 @@ on:
         type: boolean
         required: false
         default: true
+      docs:
+        description: "Docs"
+        type: boolean
+        required: false
+        default: true
 
 jobs:
   config:
@@ -88,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: [config, tests, build]
-    if: ${{ !failure() && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
+    if: ${{ !failure() && inputs.docs && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v4
       - run: git pull
