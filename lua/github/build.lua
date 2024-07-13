@@ -35,10 +35,12 @@ M.props = {
     attributes:
       label: Health
       description: Attach the output of `:checkhealth which-key` here
+      render: log
   - type: textarea
     attributes:
       label: Log
       description: Please enable logging with `opts.debug = true` and attach the contents of `./wk.log` here
+      render: log
     ]],
   },
 }
