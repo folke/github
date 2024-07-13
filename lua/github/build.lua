@@ -29,6 +29,18 @@ M.props = {
     spec = "",
     ci = "      docs: false",
   },
+  ["which-key.nvim"] = {
+    issue_extra = [[
+  - type: textarea
+    attributes:
+      label: Health
+      description: Attach the output of `:checkhealth which-key` here
+  - type: textarea
+    attributes:
+      label: Log
+      description: Please enable logging with `opts.debug = true` and attach the contents of `./wk.log` here
+    ]],
+  },
 }
 
 M.repos = {
@@ -89,6 +101,7 @@ function M.templates(dir, props)
       props[k] = v
     end
     props.ci = props.ci or ""
+    props.issue_extra = props.issue_extra or ""
     if not props.spec then
       props.spec = ([[{ "%s", opts = {} },]]):format(props.repo)
     end
