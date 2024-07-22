@@ -4,6 +4,5 @@ on:
 
 jobs:
   labeler:
-    if: contains(fromJSON('["folke", "LazyVim"]'), github.repository_owner)
     uses: folke/github/.github/workflows/labeler.yml@main
     secrets: inherit
