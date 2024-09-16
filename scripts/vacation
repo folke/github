@@ -1,0 +1,30 @@
+#!/bin/env bash
+
+repos=$(gh repo list --source --no-archived --json nameWithOwner --jq ".[].nameWithOwner" | rg nvim | sort)
+repos="$repos folke/github LazyVim/LazyVim"
+ooo=0
+
+for repo in $repos; do
+  echo "Vacation $repo"
+  gh label -R "$repo" create vacation --color=1D76DB
+  gh label -R "$repo" create pinned --color=D4C5F9
+  for issue in $(gh issue list --label "vacation" -R "$repo" --json number --jq '.[].number'); do
+    gh issue -R "$repo" delete "$issue" --yes
+  done
+
+  if [ $ooo -eq 0 ]; then
+    continue
+  fi
+
+  issue=$(
+    gh issue -R "$repo" create \
+      --label "vacation,pinned" \
+      --title "I'm on vacation till the end of August ☀️🌴🌊🏝️" \
+      --body "I'm on vacation until the end of August.
+
+I won't be checking GitHub and won't bring my laptop. See you all soon!" |
+      tail -n1
+  )
+  gh issue -R "$repo" pin "$issue"
+  echo "Created issue $issue"
+done

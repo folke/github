@@ -11,6 +11,8 @@ module.exports = async ({ github, context }) => {
     { name: "stale", color: "F9D0C4" },
     { name: "upstream", color: "FBCA04" },
     { name: "autorelease: pending", color: "0e8a16" },
+    { name: "vacation", color: "1D76DB" },
+    { name: "pinned", color: "D4C5F9" },
   ];
 
   for (const repo of repos) {
