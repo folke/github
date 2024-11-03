@@ -3,7 +3,7 @@
 module.exports = async ({ github, context }) => {
   const repos = await github.paginate("GET /user/repos", {
     affiliation: "owner",
-    visibility: "public",
+    // visibility: "public",
     per_page: 100,
   });
 

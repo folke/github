@@ -19,4 +19,5 @@ export REPOS="
   ts-comments.nvim
   which-key.nvim
   zen-mode.nvim
+  snacks.nvim
 "

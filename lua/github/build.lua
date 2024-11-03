@@ -65,6 +65,7 @@ M.repos = {
   "folke/twilight.nvim",
   "folke/which-key.nvim",
   "folke/zen-mode.nvim",
+  "folke/snacks.nvim",
 }
 
 ---@param dir string
