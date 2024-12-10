@@ -83,12 +83,16 @@ module.exports = async ({ github, context }) => {
           color: label.color,
         });
       } else {
-        await github.rest.issues.createLabel({
-          owner,
-          repo: name,
-          name: label.name,
-          color: label.color,
-        });
+        try {
+          await github.rest.issues.createLabel({
+            owner,
+            repo: name,
+            name: label.name,
+            color: label.color,
+          });
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   }
