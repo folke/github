@@ -49,10 +49,14 @@ module.exports = async ({ github, context }) => {
       // If the issue/PR is open, check if the latest comment is from stale-bot
       else if (latestCommentUrl) {
         // Fetch the comment details
-        const comment = await github.request(`GET ${latestCommentUrl}`);
-        done =
-          comment.data.user.login === "github-actions[bot]" &&
-          /stale/.test(comment.data.body);
+        try {
+          const comment = await github.request(`GET ${latestCommentUrl}`);
+          done =
+            comment.data.user.login === "github-actions[bot]" &&
+            /stale/.test(comment.data.body);
+        } catch (HttpError) {
+          console.log("Error fetching comment details");
+        }
       }
     }
     // remove api. and repos/ from the url
