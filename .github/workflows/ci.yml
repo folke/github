@@ -55,7 +55,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check Debug
-        run: /bin/grep --line-number -r -P '^(?!\s*--).*\\bdd\(' --color=always lua && exit 1 || echo "No debug messages found"
+        run: |
+          if grep --line-number -r -P '^(?!\s*--).*\\bdd\(' --color=always lua; then
+            echo "Debug messages found"
+            exit 1
+          else
+            echo "No debug messages found"
+          fi
 
   tests:
     runs-on: ubuntu-latest
