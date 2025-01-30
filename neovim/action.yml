@@ -22,7 +22,7 @@ runs:
       shell: bash
       run: |
         mkdir -p ${{ runner.temp }}/nvim
-        wget -q https://github.com/neovim/neovim/releases/download/${{ inputs.version }}/nvim.appimage -O ${{ runner.temp }}/nvim/nvim.appimage
+        wget -q https://github.com/neovim/neovim/releases/download/${{ inputs.version }}/nvim-linux-x86_64.appimage -O ${{ runner.temp }}/nvim/nvim.appimage
         cd ${{ runner.temp }}/nvim
         chmod a+x ./nvim.appimage
         ./nvim.appimage --appimage-extract
