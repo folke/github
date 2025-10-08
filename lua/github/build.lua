@@ -57,6 +57,7 @@ M.repos = {
   "folke/noice.nvim",
   "folke/paint.nvim",
   "folke/persistence.nvim",
+  "folke/sidekick.nvim",
   "folke/styler.nvim",
   "folke/todo-comments.nvim",
   "folke/tokyonight.nvim",
