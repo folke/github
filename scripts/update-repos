@@ -1,0 +1,12 @@
+#!/bin/env bash
+
+set -e
+
+repos=$(gh repo list -L 200 --source --no-archived --json nameWithOwner --jq ".[].nameWithOwner" | rg nvim)
+repos="$repos folke/github LazyVim/LazyVim"
+
+echo 'export REPOS="' >scripts/repos.sh
+echo "$repos" | tr ' ' '\n' |
+  cut -d'/' -f2 | sort |
+  awk '{print "  " $0}' | sort >>scripts/repos.sh
+echo '"' >>scripts/repos.sh

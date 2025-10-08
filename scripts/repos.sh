@@ -4,20 +4,20 @@ export REPOS="
   edgy.nvim
   flash.nvim
   github
-  lazydev.nvim
   lazy.nvim
+  lazydev.nvim
   neoconf.nvim
-  neodev.nvim
   noice.nvim
   paint.nvim
   persistence.nvim
+  sidekick.nvim
+  snacks.nvim
   styler.nvim
   todo-comments.nvim
   tokyonight.nvim
   trouble.nvim
-  twilight.nvim
   ts-comments.nvim
+  twilight.nvim
   which-key.nvim
   zen-mode.nvim
-  snacks.nvim
 "
