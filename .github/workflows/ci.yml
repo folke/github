@@ -93,7 +93,7 @@ jobs:
       - name: Run Build
         run: ./scripts/build
       - name: Push changes
-        uses: stefanzweifel/git-auto-commit-action@v6
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore(build): auto-generated build files"
 
@@ -121,7 +121,7 @@ jobs:
           treesitter: true
       - run: git pull
       - name: Push changes
-        uses: stefanzweifel/git-auto-commit-action@v6
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore(build): auto-generate docs"
 
