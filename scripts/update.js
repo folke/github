@@ -17,65 +17,65 @@ module.exports = async ({ github, context }) => {
   const LABELS = [
     {
       name: "stale",
-      color: "F9D0C4",
+      color: "d6d3d1", // #d6d3d1 (stone-300)
       description: "This issue or PR has been inactive for a while",
     },
     {
       name: "upstream",
-      color: "FBCA04",
+      color: "fbbf24", // #fbbf24 (amber-400)
       description:
         "This issue or PR depends on an upstream dependency or library",
     },
     {
       name: "autorelease: pending",
-      color: "0e8a16",
+      color: "16a34a", // #16a34a (green-600)
       description: "This PR is pending an automatic release",
     },
     {
       name: "vacation",
-      color: "1D76DB",
+      color: "3b82f6", // #3b82f6 (blue-500)
       description: "Maintainer is on vacation, response may be delayed",
     },
     {
       name: "pinned",
-      color: "D4C5F9",
+      color: "d8b4fe", // #d8b4fe (purple-300)
       description:
         "This issue should stay open and will not be marked as stale",
     },
     {
       name: "notstale",
-      color: "0E8A16",
+      color: "16a34a", // #16a34a (green-600)
       description:
         "Marks an issue or pull request to prevent it from being marked as stale",
     },
     {
       name: "wontfix",
-      color: "FFFFFF",
+      color: "e5e7eb", // #e5e7eb (gray-200)
       description: "This issue will not be fixed or implemented",
     },
     {
       name: "size/xs",
-      color: "00FF00",
+      color: "10b981", // #10b981 (emerald-500)
       description: "Extra small PR (<3 lines changed)",
     },
     {
       name: "size/s",
-      color: "7FFF00",
+      color: "84cc16", // #84cc16 (lime-500)
       description: "Small PR (<10 lines changed)",
     },
     {
       name: "size/m",
-      color: "FFFF00",
+      color: "eab308", // #eab308 (yellow-500)
       description: "Medium PR (<50 lines changed)",
     },
     {
       name: "size/l",
-      color: "FFA500",
+      color: "f97316", // #f97316 (orange-500)
       description: "Large PR (<100 lines changed)",
     },
     {
       name: "size/xl",
-      color: "FF0000",
+      color: "ef4444", // #ef4444 (red-500)
       description: "Extra large PR (100+ lines changed)",
     },
   ];
