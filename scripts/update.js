@@ -53,6 +53,31 @@ module.exports = async ({ github, context }) => {
       color: "FFFFFF",
       description: "This issue will not be fixed or implemented",
     },
+    {
+      name: "size/xs",
+      color: "00FF00",
+      description: "Extra small PR (<3 lines changed)",
+    },
+    {
+      name: "size/s",
+      color: "7FFF00",
+      description: "Small PR (<10 lines changed)",
+    },
+    {
+      name: "size/m",
+      color: "FFFF00",
+      description: "Medium PR (<50 lines changed)",
+    },
+    {
+      name: "size/l",
+      color: "FFA500",
+      description: "Large PR (<100 lines changed)",
+    },
+    {
+      name: "size/xl",
+      color: "FF0000",
+      description: "Extra large PR (100+ lines changed)",
+    },
   ];
 
   for (const repo of repos) {
