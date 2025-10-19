@@ -1,23 +1,68 @@
 // @ts-check
 /** @param {import('github-script').AsyncFunctionArguments} AsyncFunctionArguments */
 module.exports = async ({ github, context }) => {
-  const repos = await github.paginate("GET /user/repos", {
+  const userRepos = await github.paginate("GET /user/repos", {
     affiliation: "owner",
     visibility: "public",
     per_page: 100,
   });
 
+  const lazyVimRepos = await github.paginate("GET /orgs/{org}/repos", {
+    org: "LazyVim",
+    per_page: 100,
+  });
+
+  const repos = [...userRepos, ...lazyVimRepos];
+
   const LABELS = [
-    { name: "stale", color: "F9D0C4" },
-    { name: "upstream", color: "FBCA04" },
-    { name: "autorelease: pending", color: "0e8a16" },
-    { name: "vacation", color: "1D76DB" },
-    { name: "pinned", color: "D4C5F9" },
+    {
+      name: "stale",
+      color: "F9D0C4",
+      description: "This issue or PR has been inactive for a while",
+    },
+    {
+      name: "upstream",
+      color: "FBCA04",
+      description:
+        "This issue or PR depends on an upstream dependency or library",
+    },
+    {
+      name: "autorelease: pending",
+      color: "0e8a16",
+      description: "This PR is pending an automatic release",
+    },
+    {
+      name: "vacation",
+      color: "1D76DB",
+      description: "Maintainer is on vacation, response may be delayed",
+    },
+    {
+      name: "pinned",
+      color: "D4C5F9",
+      description:
+        "This issue should stay open and will not be marked as stale",
+    },
+    {
+      name: "notstale",
+      color: "0E8A16",
+      description:
+        "Marks an issue or pull request to prevent it from being marked as stale",
+    },
+    {
+      name: "wontfix",
+      color: "FFFFFF",
+      description: "This issue will not be fixed or implemented",
+    },
   ];
 
   for (const repo of repos) {
     const [owner, name] = repo.full_name.split("/");
-    if (!name.includes("nvim") || repo.fork || repo.archived || repo.disabled) {
+    if (
+      (!name.includes("nvim") && owner !== "LazyVim") ||
+      repo.fork ||
+      repo.archived ||
+      repo.disabled
+    ) {
       continue;
     }
 
@@ -63,6 +108,7 @@ module.exports = async ({ github, context }) => {
     const labels = await github.rest.issues.listLabelsForRepo({
       owner,
       repo: name,
+      per_page: 100,
     });
     for (const label of LABELS) {
       const existing = labels.data.find(
