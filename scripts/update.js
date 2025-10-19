@@ -127,6 +127,7 @@ module.exports = async ({ github, context }) => {
           name: label.name,
           new_name: label.name,
           color: label.color,
+          description: label.description,
         });
       } else {
         try {
@@ -135,6 +136,7 @@ module.exports = async ({ github, context }) => {
             repo: name,
             name: label.name,
             color: label.color,
+            description: label.description,
           });
         } catch (error) {
           console.log(error);
