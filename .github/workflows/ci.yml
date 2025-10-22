@@ -154,7 +154,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: vimdoc-${{ matrix.module }}
-          path: doc/
+          path: doc/${{ inputs.plugin }}-${{ matrix.module }}.txt
 
   docs:
     runs-on: ubuntu-latest
