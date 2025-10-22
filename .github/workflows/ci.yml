@@ -97,11 +97,13 @@ jobs:
         with:
           commit_message: "chore(build): auto-generated build files"
 
-  docs:
+  docs-build:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: [config, tests, build]
     if: ${{ !failure() && inputs.docs && inputs.repo == github.repository && github.ref == 'refs/heads/main' }}
+    outputs:
+      modules: ${{ steps.set-matrix.outputs.modules }}
     steps:
       - uses: actions/checkout@v5
       - run: git pull
@@ -110,15 +112,78 @@ jobs:
         if: ${{ needs.config.outputs.has_docs == 'true' }}
         shell: bash
         run: ./scripts/docs
-      - name: Create /doc
-        run: mkdir -p doc
-      - name: panvimdoc
+      - id: set-matrix
+        run: |
+          if [ -d "docs" ] && [ "$(ls -A docs/*.md 2>/dev/null)" ]; then
+            modules=$(cd docs && ls *.md 2>/dev/null | sed 's/\.md$//' | jq -R -s -c 'split("\n")[:-1]')
+          else
+            modules="[]"
+          fi
+          echo "modules=$modules" >> $GITHUB_OUTPUT
+      - name: Upload docs
+        if: ${{ steps.set-matrix.outputs.modules != '[]' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-md
+          path: docs/
+
+  docs-multi:
+    needs: [config, tests, build, docs-build]
+    if: ${{ !failure() && needs.docs-build.outputs.modules != '[]' && needs.docs-build.outputs.modules != '' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module: ${{ fromJson(needs.docs-build.outputs.modules) }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: docs-md
+          path: docs/
+      - name: panvimdoc (${{ matrix.module }})
+        uses: kdheepak/panvimdoc@main
+        with:
+          vimdoc: ${{ inputs.plugin }}-${{ matrix.module }}
+          pandoc: docs/${{ matrix.module }}.md
+          version: "Neovim"
+          demojify: true
+          shiftheadinglevelby: -1
+          treesitter: true
+      - name: Upload vimdoc
+        uses: actions/upload-artifact@v4
+        with:
+          name: vimdoc-${{ matrix.module }}
+          path: doc/
+
+  docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [config, tests, build, docs-build, docs-multi]
+    if: |
+      always() && !failure() && !cancelled() &&
+      inputs.docs && inputs.repo == github.repository && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v5
+      - run: git pull
+      - uses: folke/github/neovim@main
+      - name: Download vimdocs
+        if: ${{ needs.docs-build.outputs.modules != '[]' }}
+        uses: actions/download-artifact@v4
+        with:
+          pattern: vimdoc-*
+          path: doc/
+          merge-multiple: true
+      - name: panvimdoc (main)
         uses: kdheepak/panvimdoc@main
         with:
           vimdoc: ${{ inputs.plugin }}
           version: "Neovim"
           demojify: true
           treesitter: true
+      - name: Post-process docs
+        if: ${{ hashFiles('scripts/docs-post') != '' }}
+        shell: bash
+        run: ./scripts/docs-post
       - run: git pull
       - name: Push changes
         uses: stefanzweifel/git-auto-commit-action@v7
