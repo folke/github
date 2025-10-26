@@ -112,10 +112,15 @@ jobs:
         if: ${{ needs.config.outputs.has_docs == 'true' }}
         shell: bash
         run: ./scripts/docs
-      - name: Push docs changes
-        uses: stefanzweifel/git-auto-commit-action@v7
+      - name: Upload generated files
+        if: ${{ needs.config.outputs.has_docs == 'true' }}
+        uses: actions/upload-artifact@v4
         with:
-          commit_message: "chore(build): auto-generate markdown docs"
+          name: generated-docs
+          path: |
+            lua/
+            docs/*.md
+            *.md
       - id: set-matrix
         run: |
           if [ -d "docs" ] && [ "$(ls -A docs/*.md 2>/dev/null)" ]; then
@@ -133,7 +138,12 @@ jobs:
       matrix:
         module: ${{ fromJson(needs.docs-build.outputs.modules) }}
     steps:
-      - uses: actions/checkout@v5
+      - name: Download generated docs
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-docs
+      - name: Create doc directory
+        run: mkdir -p doc
       - name: panvimdoc (${{ matrix.module }})
         uses: kdheepak/panvimdoc@main
         with:
@@ -141,6 +151,7 @@ jobs:
           pandoc: docs/${{ matrix.module }}.md
           version: "Neovim"
           demojify: true
+          description: "${{ inputs.plugin }} ${{ matrix.module }} docs"
           shiftheadinglevelby: -1
           treesitter: true
       - name: Upload vimdoc
@@ -160,6 +171,11 @@ jobs:
       - uses: actions/checkout@v5
       - run: git pull
       - uses: folke/github/neovim@main
+      - name: Download generated docs
+        if: ${{ needs.config.outputs.has_docs == 'true' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-docs
       - name: Download vimdocs
         if: ${{ needs.docs-build.outputs.modules != '[]' }}
         uses: actions/download-artifact@v4
@@ -172,13 +188,13 @@ jobs:
         with:
           vimdoc: ${{ inputs.plugin }}
           version: "Neovim"
+          description: "${{ inputs.plugin }} docs"
           demojify: true
           treesitter: true
       - name: Post-process docs
         if: ${{ hashFiles('scripts/docs-post') != '' }}
         shell: bash
         run: ./scripts/docs-post
-      - run: git pull
       - name: Push changes
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
