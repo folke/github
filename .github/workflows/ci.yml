@@ -112,15 +112,19 @@ jobs:
         if: ${{ needs.config.outputs.has_docs == 'true' }}
         shell: bash
         run: ./scripts/docs
+      - name: Package changed files
+        if: ${{ needs.config.outputs.has_docs == 'true' }}
+        run: |
+          { git diff --name-only; git ls-files --others --exclude-standard; } | \
+            grep -E '^(lua/|docs/.*\.md$|[^/]*\.md$)' | \
+            tar czf /tmp/docs-changes.tar.gz -T - 2>/dev/null || \
+            { echo "No matching files to archive"; tar czf /tmp/docs-changes.tar.gz -T /dev/null; }
       - name: Upload generated files
         if: ${{ needs.config.outputs.has_docs == 'true' }}
         uses: actions/upload-artifact@v5
         with:
           name: generated-docs
-          path: |
-            lua/
-            docs/*.md
-            *.md
+          path: /tmp/docs-changes.tar.gz
       - id: set-matrix
         run: |
           if [ -d "docs" ] && [ "$(ls -A docs/*.md 2>/dev/null)" ]; then
@@ -142,6 +146,8 @@ jobs:
         uses: actions/download-artifact@v6
         with:
           name: generated-docs
+      - name: Extract changes
+        run: tar xzf docs-changes.tar.gz && rm docs-changes.tar.gz
       - name: Create doc directory
         run: mkdir -p doc
       - name: panvimdoc (${{ matrix.module }})
@@ -176,6 +182,9 @@ jobs:
         uses: actions/download-artifact@v6
         with:
           name: generated-docs
+      - name: Extract changes
+        if: ${{ needs.config.outputs.has_docs == 'true' }}
+        run: tar xzf docs-changes.tar.gz && rm docs-changes.tar.gz
       - name: Download vimdocs
         if: ${{ needs.docs-build.outputs.modules != '[]' }}
         uses: actions/download-artifact@v6
