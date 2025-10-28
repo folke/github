@@ -112,19 +112,11 @@ jobs:
         if: ${{ needs.config.outputs.has_docs == 'true' }}
         shell: bash
         run: ./scripts/docs
-      - name: Package changed files
+      - name: Commit generated files
         if: ${{ needs.config.outputs.has_docs == 'true' }}
-        run: |
-          { git diff --name-only; git ls-files --others --exclude-standard; } | \
-            grep -E '^(lua/|docs/.*\.md$|[^/]*\.md$)' | \
-            tar czf /tmp/docs-changes.tar.gz -T - 2>/dev/null || \
-            { echo "No matching files to archive"; tar czf /tmp/docs-changes.tar.gz -T /dev/null; }
-      - name: Upload generated files
-        if: ${{ needs.config.outputs.has_docs == 'true' }}
-        uses: actions/upload-artifact@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          name: generated-docs
-          path: /tmp/docs-changes.tar.gz
+          commit_message: "chore(build): auto-generated docs"
       - id: set-matrix
         run: |
           if [ -d "docs" ] && [ "$(ls -A docs/*.md 2>/dev/null)" ]; then
@@ -142,12 +134,8 @@ jobs:
       matrix:
         module: ${{ fromJson(needs.docs-build.outputs.modules) }}
     steps:
-      - name: Download generated docs
-        uses: actions/download-artifact@v6
-        with:
-          name: generated-docs
-      - name: Extract changes
-        run: tar xzf docs-changes.tar.gz && rm docs-changes.tar.gz
+      - uses: actions/checkout@v5
+      - run: git pull
       - name: Create doc directory
         run: mkdir -p doc
       - name: panvimdoc (${{ matrix.module }})
@@ -177,14 +165,6 @@ jobs:
       - uses: actions/checkout@v5
       - run: git pull
       - uses: folke/github/neovim@main
-      - name: Download generated docs
-        if: ${{ needs.config.outputs.has_docs == 'true' }}
-        uses: actions/download-artifact@v6
-        with:
-          name: generated-docs
-      - name: Extract changes
-        if: ${{ needs.config.outputs.has_docs == 'true' }}
-        run: tar xzf docs-changes.tar.gz && rm docs-changes.tar.gz
       - name: Download vimdocs
         if: ${{ needs.docs-build.outputs.modules != '[]' }}
         uses: actions/download-artifact@v6
@@ -207,7 +187,7 @@ jobs:
       - name: Push changes
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          commit_message: "chore(build): auto-generate docs"
+          commit_message: "chore(build): auto-generated vimdocs"
 
   release:
     name: release
