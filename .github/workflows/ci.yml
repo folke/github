@@ -149,7 +149,7 @@ jobs:
           shiftheadinglevelby: -1
           treesitter: true
       - name: Upload vimdoc
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: vimdoc-${{ matrix.module }}
           path: doc/${{ inputs.plugin }}-${{ matrix.module }}.txt
